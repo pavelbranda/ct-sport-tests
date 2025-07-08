@@ -1,8 +1,8 @@
-# ČT Sport - Automatizační testy (Playwright + TypeScript)
+# ČT Sport - Zadání pro technické kolo pohovoru
 
 ## Úvod
 
-Tento projekt obsahuje automatizované UI testy pro web ČT Sport (https://sport.ceskatelevize.cz/), připravené pomocí Playwright a TypeScript.
+Tento projekt obsahuje automatizované UI testy pro web ČT Sport (https://sport.ceskatelevize.cz/) napsané v jazyce TypeScript a frameworku Playwright.
 
 ## Technologický stack
 
@@ -23,13 +23,13 @@ V horním menu webu se aktuálně mění sportovní sekce podle sezóny (např. 
 - Otevřít rubriku **Cyklistika**.
 - Ověřit, že všechny články v seznamu mají zobrazené datum.
 - Najít první článek, který není video (podle absence štítku "VIDEO").
-  - Poznámka: Pokud na stránce nejsou žádné ne-video články, test bude tuto situaci hlásit (např. skip nebo fail s vysvětlením).
+  - Poznámka: Poznámka: Pokud na stránce nejsou žádné ne-video články, test tuto situaci zaloguje a kontrolu ukončí.
 - Otevřít tento článek.
 - Ověřit, že článek obsahuje:
   - autora (v horní pravé části nad textem)
   - zdroj (ve spodní části článku)
 - Najít sekci **Související články**.
-- Ověřit, že první související článek je ze stejné rubriky (kontrola URL → obsahuje např. "/cyklistika/").
+- Ověřit, že první související článek je ze stejné rubriky (kontrola URL → obsahuje "/cyklistika/").
 
 ### Test 2
 
@@ -41,7 +41,10 @@ V horním menu webu se aktuálně mění sportovní sekce podle sezóny (např. 
 ## Poznámky k robustnosti
 
 - Web ČT Sport je dynamický (články se mění, přibývají nové). Testy proto pracují s obecnými strukturami (např. kontrola přítomnosti data, nikoliv konkrétní hodnoty).
-- Kategorie "Cyklistika" může být někdy méně viditelná, proto volím konzistentní cestu přes "Všechny sporty".
+- Kategorie „Cyklistika“ nemusí být v hlavním menu vždy viditelná (např. během Tour de France se nahrazuje jinou záložkou). Aby byl test stabilní a opakovatelný, používám přístup přes „Všechny sporty“, kde je „Cyklistika“ dostupná vždy.
+
+**Limitace u článků:** 
+Některé články (například živé přenosy – "Live" články) nemusí mít vyplněného autora nebo zdroj. Test aktuálně používá tvrdé kontroly (`expect(...).toBeVisible()`), což při kontrole těchto článků může způsobit selhání. Tento přístup odpovídá zadání ("Zkontrolujte, že má článek autora a zdroj"), ale v reálné praxi by bylo vhodné ošetřit případy live článků dynamicky (například detekovat typ článku a v případě "Live" článku kontrolu autora/zdroje vynechat).
 
 ## Spuštění
 
@@ -55,8 +58,17 @@ Pro spuštění s otevřeným prohlížečem (headed mode):
 ```bash
 npm test -- --headed
 ```
-
 ## Poznámky k ladění
 
-- Během vývoje jsem jednotlivé články (datum a pořadí) nechal logovat do konzole 
-- Tyto ladicí logy jsou aktuálně v kódu zakomentované (viz komentované řádky ve for-cyklu v souboru `cycling.spec.ts`). 
+- V testech jsou zachovány **zakomentované** ladicí řádky (např. `console.log`, outline highlighty, `page.pause()`).
+- Pro snadnější vizuální kontrolu je možné odkomentovat ladicí řádky (console.log, outline highlighty, page.pause()).
+- V produkčním prostředí by se tyto logy a pauzy obvykle odstranily.
+- Ve výchozím stavu je však test připravený na plně automatické spouštění (např. v CI/CD pipeline), protože neobsahuje žádné aktivní pauzy ani vizuální ladicí prvky.
+
+
+Například v souboru `tests/cyklistika-articles.spec.ts` uvidíte zakomentované části:
+
+```ts
+// console.log(`Article ${i + 1}: ${title}`);
+// await article.evaluate(el => el.style.outline = '3px solid green');
+// await page.pause();
