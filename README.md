@@ -33,10 +33,10 @@ V horním menu webu se aktuálně mění sportovní sekce podle sezóny (např. 
 
 ### Test 2
 
-- Otevřít web při šířce viewportu pod 700 px.
-- Ověřit, že se zobrazuje hamburger menu.
-- Ověřit, že v menu existuje položka **Cyklistika**.
-- Kliknout na ni a ověřit, že jsme v rubrice Cyklistika.
+- Otevřít web při šířce viewportu pod 700 px (v tomto testu konkrétně 600x800). 
+- Ověřit, že se zobrazuje hamburger menu ("Rubriky").
+- Kliknout na "Všechny sporty" a následně na "Cyklistika".
+- Ověřit, že jsme přesměrováni do rubriky **Cyklistika** (kontrola URL obsahuje "/cyklistika").
 
 ## Poznámky k robustnosti
 
