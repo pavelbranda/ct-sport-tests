@@ -16,6 +16,20 @@ Tento projekt obsahuje automatizované UI testy pro web ČT Sport (https://sport
 
 V horním menu webu se aktuálně mění sportovní sekce podle sezóny (např. Tour de France). Aby byly testy robustní a udržitelné, volím cestu přes **"Všechny sporty" → "Cyklistika"**, která je stabilní a nezávislá na aktuálních událostech.
 
+## Ukázky obrazovek
+
+Níže jsou ilustrační screenshoty (červenec 2025), které vizuálně doplňují testované scénáře:
+
+### Desktop
+
+![Cyklistika hlavní stránka](./screenshots/desktop-cycling-page.png)
+![Detail článku](./screenshots/article-detail.png)
+
+### Mobilní menu
+
+![Hamburger menu](./screenshots/mobile-menu.png)
+![Cyklistika v mobilním menu](./screenshots/mobile-cycling.png)
+
 ## Strategie testů
 
 ### Test 1
@@ -60,14 +74,10 @@ npm test -- --headed
 ```
 ## Poznámky k ladění
 
-- V testech jsou zachovány **zakomentované** ladicí řádky (např. `console.log`, outline highlighty, `page.pause()`).
-- Pro snadnější vizuální kontrolu je možné odkomentovat ladicí řádky (console.log, outline highlighty, page.pause()).
-- V produkčním prostředí by se tyto logy a pauzy obvykle odstranily.
-- Ve výchozím stavu je však test připravený na plně automatické spouštění (např. v CI/CD pipeline), protože neobsahuje žádné aktivní pauzy ani vizuální ladicí prvky.
+- V průběhu vývoje jsem používal různé metody ladění přímo v kódu (např. pomocné funkce, `pause`, logy do terminálu). Tyto "debug" verze mám uložené lokálně.
+- V této finální ("produkční") verzi nejsou aktivní žádné ladicí (`pause`, `highlight`, extra logy) kroky — kód je připravený na čistý a stabilní běh. V CI/CD prostředí by tak test neběžel zbytečně dlouho ani nezastavoval průběh.
 
-
-Například v souboru `tests/cyklistika-articles.spec.ts` uvidíte zakomentované části:
-
+**Příklady**
 ```ts
 // console.log(`Article ${i + 1}: ${title}`);
 // await article.evaluate(el => el.style.outline = '3px solid green');
